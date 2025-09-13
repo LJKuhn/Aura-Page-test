@@ -1,4 +1,4 @@
-# ui-components Sandbox
+# ui-components Sandbox.
 
 ## Descripción
 Sandbox individual para el desarrollo de ui-components.
