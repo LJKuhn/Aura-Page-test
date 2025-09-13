@@ -1,0 +1,1 @@
+const e={pages:{home:{welcomeHeading:"Bienvenido a AURA",subtitle:"Administración Unificada de Recursos y Accesos - Sistema de Gestión Universitaria",recentActivity:"Actividad Reciente",systemStatus:"Estado del Sistema"},profile:{heading:"Configuración de Perfil"},roles:{heading:"Roles y Permisos"}}};export{e as m};
