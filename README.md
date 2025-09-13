@@ -268,36 +268,6 @@ Formato: Nombre | Descripción breve | Props principales | Valor de retorno / Ef
 ### Datos y Estado
 
 1. Progress
-
-## Estado de Localización (i18n simplificada)
-
-Se realizó una traducción directa al español de todos los textos visibles en las páginas. Criterios:
-1. Claves internas o potenciales identificadores (status, type, id, keys de permisos) se mantienen en inglés cuando representan un valor de dominio que podría mapearse en el backend.
-2. Etiquetas de UI, encabezados, placeholders y mensajes descriptivos se han traducido al español neutro.
-3. Para permisos (RolesPermissions) se muestra acción y componente traducidos, dejando un comentario con la clave original en inglés para facilitar futura integración.
-4. No se introdujo un framework de i18n (ej. i18next) para evitar complejidad prematura. Cuando se integre, centralizar strings en un archivo de recursos y reemplazar literales.
-5. Fecha/hora permanecen en algunas páginas como literales mock. Recomendado usar dayjs/date-fns con locale es al integrar backend.
-
-Cobertura actual:
-- Páginas traducidas y documentadas: Home, Dashboard, Devices, DeviceAdministration, Communications, EventsLogs, RolesPermissions, UserManagement, LocationManagement, ZoneAdministration, SystemSettings, Profile, NotFound, Index.
-- Pendiente (no aplica o ya estaba): Componentes base y hooks (comentados en inglés donde son autoexplicativos, se pueden traducir posteriormente si se exige uniformidad total).
-
-## Guía para futuras traducciones
-1. Evitar duplicar cadenas; extraer a un objeto `messages` cuando una misma etiqueta aparezca en >3 lugares.
-2. Mantener comentarios de intención encima de bloques complejos (// Traducción: ... ) cuando la palabra en inglés sea un término de dominio aceptado.
-3. Para nuevos permisos: añadir clave backend (en inglés) y label mostrado (español). Ejemplo:
-```ts
-// backendKey: 'DEVICE_RESTART'
-{ id: 'X', action: 'Reiniciar Dispositivo', component: 'Gestión de Dispositivos', role: 'Administrator' }
-```
-4. Cuando se implemente i18n formal, crear `src/i18n/es.ts` y `src/i18n/en.ts` y sustituir literales progresivamente.
-
-## Decisión sobre rollup-plugin-visualizer
-El plugin de análisis se dejó como dependencia de desarrollo (`rollup-plugin-visualizer`). Actualmente NO se ejecuta automáticamente para evitar fallos en Docker. Para generar el reporte manual:
-```
-npm run analyze
-```
-Esto abrirá `dist/stats.html` tras el build. Si se desea remover completamente, borrar el script y la dependencia.
  - Descripción: Barra de progreso determinado.
  - Props: value (0-100).
  - Retorno: JSX.Element.
@@ -567,3 +537,72 @@ npm run test:coverage
 Reporte (por defecto en `coverage/`), revisar HTML para detalles.
 - Lazy load para páginas raramente usadas (ej. SystemSettings) usando `React.lazy`.
 - Configurar prefetch dinámico según rutas críticas.
+
+# Despliegue en GitHub Pages
+
+Este proyecto puede ser publicado automáticamente en GitHub Pages siguiendo estos pasos:
+
+## Pasos para publicar el frontend en GitHub Pages
+
+1. **Configura Vite para GitHub Pages**
+   - Edita `vite.config.ts` y agrega:
+     ```ts
+     base: '/Aura-Page-test/'
+     ```
+
+2. **Asegúrate de que `.gitignore` incluya `node_modules` y `dist`**
+
+3. **Compila el proyecto**
+   ```bash
+   npm run build
+   ```
+
+4. **Agrega el workflow de GitHub Actions**
+   - Crea el archivo `.github/workflows/deploy.yml` con:
+     ```yaml
+     name: Deploy to GitHub Pages
+     on:
+       push:
+         branches:
+           - main
+     jobs:
+       build-and-deploy:
+         runs-on: ubuntu-latest
+         steps:
+           - name: Checkout code
+             uses: actions/checkout@v4
+           - name: Setup Node.js
+             uses: actions/setup-node@v4
+             with:
+               node-version: '20'
+           - name: Install dependencies
+             run: npm install
+           - name: Build
+             run: npm run build
+           - name: Deploy
+             uses: peaceiris/actions-gh-pages@v4
+             with:
+               github_token: ${{ secrets.GITHUB_TOKEN }}
+               publish_dir: ./dist
+     ```
+
+5. **Haz commit y push de tus cambios**
+   ```bash
+   git add .
+   git commit -m "Configurar despliegue automático a GitHub Pages"
+   git push origin main
+   ```
+
+6. **Verifica el workflow en la pestaña Actions de GitHub**
+
+7. **Activa GitHub Pages**
+   - Ve a Settings > Pages
+   - Selecciona la rama `gh-pages` y la carpeta raíz `/`
+   - Guarda los cambios
+
+8. **Accede a tu sitio**
+   - GitHub te mostrará la URL pública donde estará disponible tu frontend.
+
+---
+
+> Cada vez que hagas push a `main`, tu sitio se actualizará automáticamente en GitHub Pages.

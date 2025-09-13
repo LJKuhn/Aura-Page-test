@@ -44,7 +44,7 @@ const App = () => {
   return (
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
+  <BrowserRouter basename="/Aura-Page-test">
           <AuthProvider>
             <Suspense fallback={<RouteFallback />}> 
               <Routes>
