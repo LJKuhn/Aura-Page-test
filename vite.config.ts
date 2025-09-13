@@ -9,6 +9,7 @@ const currentFilename = fileURLToPath(import.meta.url)
 const currentDirname = path.dirname(currentFilename)
 
 export default defineConfig({
+  base: '/Aura-Page-test/',
   plugins: [
   react()
   // Visualizador opcional: ejecutar "npm run analyze" para generar reporte.
